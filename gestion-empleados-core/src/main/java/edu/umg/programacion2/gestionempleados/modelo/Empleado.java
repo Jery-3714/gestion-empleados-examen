@@ -11,29 +11,49 @@ public class Empleado {
     private double bonoCompetencia;
     private LocalDate fechaContratacion;
     private boolean activo;
-
+    
     public Empleado() {
     }
 
     public Empleado(int id, String nombreCompleto, String departamento,
-            double salario, LocalDate fechaContratacion, boolean activo) {
+            double salario, double bonoCompetencia,
+            LocalDate fechaContratacion, boolean activo) {
+
         this.id = id;
         this.nombreCompleto = nombreCompleto;
         this.departamento = departamento;
         this.salario = salario;
+        this.bonoCompetencia = bonoCompetencia;
         this.fechaContratacion = fechaContratacion;
         this.activo = activo;
     }
 
     public Empleado(String nombreCompleto, String departamento,
-            double salario, LocalDate fechaContratacion, boolean activo) {
+
+            double salario, double bonoCompetencia,
+            LocalDate fechaContratacion, boolean activo) {
+
         this.nombreCompleto = nombreCompleto;
         this.departamento = departamento;
         this.salario = salario;
+        this.bonoCompetencia = bonoCompetencia;
         this.fechaContratacion = fechaContratacion;
         this.activo = activo;
     }
+    
+    public Empleado(String nombreCompleto, String departamento,
 
+            double salario, LocalDate fechaContratacion, boolean activo) {
+
+        this.nombreCompleto = nombreCompleto;
+        this.departamento = departamento;
+        this.salario = salario;
+        this.bonoCompetencia = 0.00;
+        this.fechaContratacion = fechaContratacion;
+        this.activo = activo;
+
+    }
+   
     public int getId() {
         return id;
     }
@@ -64,6 +84,18 @@ public class Empleado {
 
     public void setSalario(double salario) {
         this.salario = salario;
+    }
+    
+    public double getBonoCompetencia() {
+
+        return bonoCompetencia;
+
+    }
+
+    public void setBonoCompetencia(double bonoCompetencia) {
+
+        this.bonoCompetencia = bonoCompetencia;
+
     }
 
     public LocalDate getFechaContratacion() {

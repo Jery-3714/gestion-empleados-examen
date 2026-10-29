@@ -15,8 +15,8 @@ public class EmpleadoDAO {
 
     public boolean crear(Empleado empleado) throws SQLException {
         String sql = "INSERT INTO empleados "
-                + "(nombre_completo, departamento, salario, fecha_contratacion, activo) "
-                + "VALUES (?, ?, ?, ?, ?)";
+                + "(nombre_completo, departamento, salario, bono_competencia, fecha_contratacion, activo) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conexion = ConexionBD.conectar();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -24,8 +24,9 @@ public class EmpleadoDAO {
             ps.setString(1, empleado.getNombreCompleto());
             ps.setString(2, empleado.getDepartamento());
             ps.setDouble(3, empleado.getSalario());
-            ps.setDate(4, Date.valueOf(empleado.getFechaContratacion()));
-            ps.setBoolean(5, empleado.isActivo());
+            ps.setDouble(4, empleado.getBonoCompetencia());
+            ps.setDate(5, Date.valueOf(empleado.getFechaContratacion()));
+            ps.setBoolean(6, empleado.isActivo());
 
             return ps.executeUpdate() > 0;
         }
@@ -45,6 +46,7 @@ public class EmpleadoDAO {
                         rs.getString("nombre_completo"),
                         rs.getString("departamento"),
                         rs.getDouble("salario"),
+                        rs.getDouble("bono_competencia"),
                         rs.getDate("fecha_contratacion").toLocalDate(),
                         rs.getBoolean("activo")
                 );
@@ -71,6 +73,7 @@ public class EmpleadoDAO {
                             rs.getString("nombre_completo"),
                             rs.getString("departamento"),
                             rs.getDouble("salario"),
+                            rs.getDouble("bono_competencia"),
                             rs.getDate("fecha_contratacion").toLocalDate(),
                             rs.getBoolean("activo")
                     );
@@ -83,8 +86,8 @@ public class EmpleadoDAO {
 
     public boolean actualizar(Empleado empleado) throws SQLException {
         String sql = "UPDATE empleados SET nombre_completo = ?, "
-                + "departamento = ?, salario = ?, fecha_contratacion = ?, "
-                + "activo = ? WHERE id = ?";
+                + "departamento = ?, salario = ?, bono_competencia = ?, "
+                + "fecha_contratacion = ?, activo = ? WHERE id = ?";
 
         try (Connection conexion = ConexionBD.conectar();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -92,9 +95,10 @@ public class EmpleadoDAO {
             ps.setString(1, empleado.getNombreCompleto());
             ps.setString(2, empleado.getDepartamento());
             ps.setDouble(3, empleado.getSalario());
-            ps.setDate(4, Date.valueOf(empleado.getFechaContratacion()));
-            ps.setBoolean(5, empleado.isActivo());
-            ps.setInt(6, empleado.getId());
+            ps.setDouble(4, empleado.getBonoCompetencia());
+            ps.setDate(5, Date.valueOf(empleado.getFechaContratacion()));
+            ps.setBoolean(6, empleado.isActivo());
+            ps.setInt(7, empleado.getId());
 
             return ps.executeUpdate() > 0;
         }
