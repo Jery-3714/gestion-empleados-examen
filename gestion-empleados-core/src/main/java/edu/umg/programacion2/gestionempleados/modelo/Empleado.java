@@ -8,6 +8,7 @@ public class Empleado {
     private String nombreCompleto;
     private String departamento;
     private double salario;
+    private double bonoCompetencia;
     private LocalDate fechaContratacion;
     private boolean activo;
 
