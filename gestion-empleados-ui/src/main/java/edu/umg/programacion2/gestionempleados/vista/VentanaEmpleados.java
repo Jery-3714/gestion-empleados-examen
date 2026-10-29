@@ -18,6 +18,7 @@ public class VentanaEmpleados extends JFrame {
     private JTextField txtNombre;
     private JTextField txtDepartamento;
     private JTextField txtSalario;
+    private JTextField txtBonoCompetencia;
     private JTextField txtFecha;
     private JCheckBox chkActivo;
 
@@ -28,11 +29,11 @@ public class VentanaEmpleados extends JFrame {
 
     public VentanaEmpleados() {
         setTitle("Sistema de Gestion de Empleados");
-        setSize(850, 500);
+        setSize(950, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel formulario = new JPanel(new GridLayout(6, 2, 5, 5));
+        JPanel formulario = new JPanel(new GridLayout(7, 2, 5, 5));
 
         txtId = new JTextField();
         txtId.setEditable(false);
@@ -40,6 +41,7 @@ public class VentanaEmpleados extends JFrame {
         txtNombre = new JTextField();
         txtDepartamento = new JTextField();
         txtSalario = new JTextField();
+        txtBonoCompetencia = new JTextField();
         txtFecha = new JTextField();
         chkActivo = new JCheckBox("Empleado activo", true);
 
@@ -55,6 +57,9 @@ public class VentanaEmpleados extends JFrame {
         formulario.add(new JLabel("Salario:"));
         formulario.add(txtSalario);
 
+        formulario.add(new JLabel("Bono de competencia:"));
+        formulario.add(txtBonoCompetencia);
+
         formulario.add(new JLabel("Fecha de contratacion (AAAA-MM-DD):"));
         formulario.add(txtFecha);
 
@@ -63,6 +68,7 @@ public class VentanaEmpleados extends JFrame {
 
         modeloTabla = new DefaultTableModel(
                 new Object[]{"ID", "Nombre", "Departamento", "Salario",
+                    "Bono de competencia", "Total",
                     "Fecha de contratacion", "Activo"}, 0) {
             @Override
             public boolean isCellEditable(int fila, int columna) {
@@ -82,9 +88,11 @@ public class VentanaEmpleados extends JFrame {
                     txtNombre.setText(modeloTabla.getValueAt(fila, 1).toString());
                     txtDepartamento.setText(modeloTabla.getValueAt(fila, 2).toString());
                     txtSalario.setText(modeloTabla.getValueAt(fila, 3).toString());
-                    txtFecha.setText(modeloTabla.getValueAt(fila, 4).toString());
+                    txtBonoCompetencia.setText(
+                            modeloTabla.getValueAt(fila, 4).toString());
+                    txtFecha.setText(modeloTabla.getValueAt(fila, 6).toString());
                     chkActivo.setSelected(
-                            modeloTabla.getValueAt(fila, 5).toString().equals("Sí"));
+                            modeloTabla.getValueAt(fila, 7).toString().equals("Sí"));
                 }
             }
         });
@@ -125,11 +133,17 @@ public class VentanaEmpleados extends JFrame {
             List<Empleado> empleados = dao.listarTodos();
 
             for (Empleado empleado : empleados) {
+
+                double total = empleado.getSalario()
+                        + empleado.getBonoCompetencia();
+
                 modeloTabla.addRow(new Object[]{
                     empleado.getId(),
                     empleado.getNombreCompleto(),
                     empleado.getDepartamento(),
                     empleado.getSalario(),
+                    empleado.getBonoCompetencia(),
+                    total,
                     empleado.getFechaContratacion(),
                     empleado.isActivo() ? "Sí" : "No"
                 });
@@ -145,6 +159,7 @@ public class VentanaEmpleados extends JFrame {
             if (txtNombre.getText().trim().isEmpty()
                     || txtDepartamento.getText().trim().isEmpty()
                     || txtSalario.getText().trim().isEmpty()
+                    || txtBonoCompetencia.getText().trim().isEmpty()
                     || txtFecha.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this,
                         "Completa todos los campos.");
@@ -156,6 +171,15 @@ public class VentanaEmpleados extends JFrame {
             if (!Double.isFinite(salario) || salario <= 0) {
                 JOptionPane.showMessageDialog(this,
                         "El salario debe ser mayor que cero.");
+                return false;
+            }
+
+            double bonoCompetencia = Double.parseDouble(
+                    txtBonoCompetencia.getText().trim());
+
+            if (!Double.isFinite(bonoCompetencia) || bonoCompetencia < 0) {
+                JOptionPane.showMessageDialog(this,
+                        "El bono de competencia no puede ser negativo.");
                 return false;
             }
 
@@ -171,7 +195,7 @@ public class VentanaEmpleados extends JFrame {
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
-                    "El salario debe ser un numero valido.");
+                    "El salario y el bono deben ser numeros validos.");
         } catch (java.time.format.DateTimeParseException e) {
             JOptionPane.showMessageDialog(this,
                     "Usa el formato de fecha AAAA-MM-DD.");
@@ -185,6 +209,7 @@ public class VentanaEmpleados extends JFrame {
                 txtNombre.getText().trim(),
                 txtDepartamento.getText().trim(),
                 Double.parseDouble(txtSalario.getText().trim()),
+                Double.parseDouble(txtBonoCompetencia.getText().trim()),
                 LocalDate.parse(txtFecha.getText().trim()),
                 chkActivo.isSelected()
         );
@@ -271,6 +296,7 @@ public class VentanaEmpleados extends JFrame {
         txtNombre.setText("");
         txtDepartamento.setText("");
         txtSalario.setText("");
+        txtBonoCompetencia.setText("");
         txtFecha.setText("");
         chkActivo.setSelected(true);
         tabla.clearSelection();
